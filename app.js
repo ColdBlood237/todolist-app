@@ -13,7 +13,18 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-mongoose.connect(process.env.DATABASEACCESS);
+const PORT = process.env.PORT;
+
+const connectDB = async () => {
+  try {
+    const conn = await mongoose.connect(process.env.MONGOURL);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+}
+
 
 const itemsSchema = new mongoose.Schema({
   name: String
@@ -137,6 +148,9 @@ app.get("/about", function (req, res) {
   res.render("about");
 });
 
-app.listen(3000, function () {
-  console.log("Server started on port 3000");
-});
+//Connect to the database before listening
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log("listening for requests");
+  })
+})
