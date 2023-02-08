@@ -13,7 +13,7 @@ app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 const connectDB = async () => {
   try {
